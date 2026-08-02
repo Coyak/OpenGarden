@@ -1,0 +1,218 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  /* Default: Obsidian Sage (Organic Paper Dark) */
+  :root, [data-theme="obsidian"] {
+    --bg-main: #111319;
+    --bg-surface: #191c24;
+    --bg-card: #212530;
+    --border-color: #2b3140;
+    --text-main: #edf0f5;
+    --text-muted: #8e9bb0;
+    --accent: #10b981; /* Sage Emerald */
+    --accent-glow: rgba(16, 185, 129, 0.15);
+    --node-seed: #10b981;
+    --node-growing: #38bdf8;
+    --node-evergreen: #a855f7;
+  }
+
+  /* Forest Warm */
+  [data-theme="forest"] {
+    --bg-main: #0c1410;
+    --bg-surface: #14201a;
+    --bg-card: #1c2b23;
+    --border-color: #283d32;
+    --text-main: #f0fdf4;
+    --text-muted: #86efac;
+    --accent: #22c55e;
+    --accent-glow: rgba(34, 197, 94, 0.15);
+    --node-seed: #4ade80;
+    --node-growing: #06b6d4;
+    --node-evergreen: #a3e635;
+  }
+
+  /* Sakura Slate */
+  [data-theme="sakura"] {
+    --bg-main: #171116;
+    --bg-surface: #221a21;
+    --bg-card: #2e232d;
+    --border-color: #40323e;
+    --text-main: #fdf2f8;
+    --text-muted: #f472b6;
+    --accent: #f43f5e;
+    --accent-glow: rgba(244, 63, 94, 0.15);
+    --node-seed: #fb7185;
+    --node-growing: #38bdf8;
+    --node-evergreen: #c084fc;
+  }
+
+  /* Cyberpunk Minimal */
+  [data-theme="cyberpunk"] {
+    --bg-main: #0b0c12;
+    --bg-surface: #13141f;
+    --bg-card: #16162a;
+    --border-color: #2b2d45;
+    --text-main: #f8fafc;
+    --text-muted: #38bdf8;
+    --accent: #0ea5e9;
+    --accent-glow: rgba(14, 165, 233, 0.15);
+    --node-seed: #eab308;
+    --node-growing: #0ea5e9;
+    --node-evergreen: #f43f5e;
+  }
+
+  body {
+    background-color: var(--bg-main);
+    color: var(--text-main);
+    font-family: 'Inter', system-ui, sans-serif;
+    overflow-x: hidden;
+    transition: background-color 0.25s ease, color 0.25s ease;
+  }
+}
+
+/* NOTION MARKDOWN TYPOGRAPHY & FULL GFM SPEC STYLES */
+.prose {
+  color: #e2e8f0;
+  max-width: 100%;
+}
+
+.prose h1 {
+  font-size: 1.875rem !important; /* 30px */
+  line-height: 2.25rem !important;
+  font-weight: 800 !important;
+  color: #ffffff !important;
+  margin-top: 1.5rem !important;
+  margin-bottom: 0.75rem !important;
+  letter-spacing: -0.02em !important;
+}
+
+.prose h2 {
+  font-size: 1.375rem !important; /* 22px */
+  line-height: 1.75rem !important;
+  font-weight: 700 !important;
+  color: #f8fafc !important;
+  margin-top: 1.25rem !important;
+  margin-bottom: 0.5rem !important;
+  letter-spacing: -0.01em !important;
+}
+
+.prose h3 {
+  font-size: 1.125rem !important; /* 18px */
+  line-height: 1.5rem !important;
+  font-weight: 600 !important;
+  color: #f1f5f9 !important;
+  margin-top: 1rem !important;
+  margin-bottom: 0.5rem !important;
+}
+
+.prose h4, .prose h5, .prose h6 {
+  font-size: 1rem !important;
+  font-weight: 600 !important;
+  color: #cbd5e1 !important;
+  margin-top: 0.75rem !important;
+  margin-bottom: 0.25rem !important;
+}
+
+.prose p {
+  margin-top: 0.5rem !important;
+  margin-bottom: 0.5rem !important;
+  line-height: 1.625 !important;
+  color: #cbd5e1 !important;
+}
+
+.prose ul {
+  list-style-type: disc !important;
+  padding-left: 1.5rem !important;
+  margin-top: 0.5rem !important;
+  margin-bottom: 0.5rem !important;
+}
+
+.prose ol {
+  list-style-type: decimal !important;
+  padding-left: 1.5rem !important;
+  margin-top: 0.5rem !important;
+  margin-bottom: 0.5rem !important;
+}
+
+.prose li {
+  margin-top: 0.25rem !important;
+  margin-bottom: 0.25rem !important;
+  color: #e2e8f0 !important;
+}
+
+.prose blockquote {
+  border-left: 4px solid var(--accent) !important;
+  padding-left: 1rem !important;
+  margin-top: 1rem !important;
+  margin-bottom: 1rem !important;
+  font-style: italic !important;
+  color: var(--text-muted) !important;
+  background: var(--bg-surface) !important;
+  padding-top: 0.5rem !important;
+  padding-bottom: 0.5rem !important;
+  border-radius: 0 0.5rem 0.5rem 0 !important;
+}
+
+.prose a.markdown-link {
+  color: #38bdf8 !important;
+  font-weight: 600 !important;
+  text-decoration: underline !important;
+  text-underline-offset: 4px !important;
+  transition: color 0.2s ease !important;
+}
+
+.prose a.markdown-link:hover {
+  color: #7dd3fc !important;
+}
+
+.prose a.wikilink {
+  color: #10b981 !important;
+  font-weight: 600 !important;
+  text-decoration: underline !important;
+  text-underline-offset: 4px !important;
+  text-decoration-color: rgba(16, 185, 129, 0.5) !important;
+  transition: color 0.2s ease !important;
+}
+
+.prose a.wikilink:hover {
+  color: #34d399 !important;
+}
+
+.prose hr {
+  border: 0 !important;
+  border-top: 1px solid var(--border-color) !important;
+  margin: 1.5rem 0 !important;
+}
+
+/* Custom minimal scrollbar */
+::-webkit-scrollbar {
+  width: 5px;
+  height: 5px;
+}
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+::-webkit-scrollbar-thumb {
+  background: var(--border-color);
+  border-radius: 4px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: var(--text-muted);
+}
+
+/* Clean Notion-style card panel */
+.notion-panel {
+  background: var(--bg-surface);
+  border: 1px solid var(--border-color);
+  border-radius: 0.875rem;
+}
+
+/* Glassmorphism clean utility */
+.glass-panel {
+  background: rgba(25, 28, 36, 0.75);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border: 1px solid var(--border-color);
+}

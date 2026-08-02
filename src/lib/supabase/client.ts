@@ -1,0 +1,11 @@
+import { createBrowserClient } from '@supabase/ssr';
+import type { SupabaseClient } from '@supabase/supabase-js';
+
+const supabaseUrl = import.meta.env.VITE_SUPABASE_URL || 'https://placeholder.supabase.co';
+const supabaseAnonKey = import.meta.env.VITE_SUPABASE_ANON_KEY || 'placeholder-anon-key';
+
+export function createClient(): SupabaseClient {
+  return createBrowserClient(supabaseUrl, supabaseAnonKey);
+}
+
+export const supabase = createClient();
