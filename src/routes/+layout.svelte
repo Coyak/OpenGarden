@@ -1,10 +1,12 @@
 <script lang="ts">
   import '../app.css';
   import { onMount } from 'svelte';
-  import { Sparkles, Palette, BookOpen, Compass, LogIn, UserPlus, Sprout, Network, FolderTree, LayoutDashboard } from 'lucide-svelte';
+  import { Sparkles, Palette, BookOpen, Compass, LogIn, UserPlus, LogOut, Sprout, Network, FolderTree, LayoutDashboard, User } from 'lucide-svelte';
+  import { supabase } from '$lib/supabase/client';
 
   let currentTheme: string = 'obsidian';
   let showThemeDropdown = false;
+  let userSession: any = null;
 
   const themes: { id: string; name: string; iconColor: string }[] = [
     { id: 'obsidian', name: 'Obsidian Warm', iconColor: 'bg-emerald-500' },
@@ -22,11 +24,30 @@
     showThemeDropdown = false;
   }
 
+  async function handleLogout() {
+    await supabase.auth.signOut();
+    userSession = null;
+    window.location.href = '/';
+  }
+
   onMount(() => {
     const savedTheme = localStorage.getItem('opengarden-theme');
     if (savedTheme && themes.some(t => t.id === savedTheme)) {
       setTheme(savedTheme);
     }
+
+    // Check active session and listen to auth changes
+    supabase.auth.getSession().then(({ data }) => {
+      userSession = data.session;
+    });
+
+    const { data: authListener } = supabase.auth.onAuthStateChange((_event, session) => {
+      userSession = session;
+    });
+
+    return () => {
+      authListener?.subscription.unsubscribe();
+    };
   });
 </script>
 
@@ -47,7 +68,7 @@
         </div>
       </a>
 
-      <!-- Navigation Links (Absolute URLs for smooth cross-route navigation) -->
+      <!-- Navigation Links -->
       <nav class="hidden md:flex items-center space-x-6 text-xs font-semibold text-garden-muted">
         <a href="/#zettelkasten" class="hover:text-white transition-colors flex items-center space-x-1.5">
           <BookOpen class="w-4 h-4 text-emerald-400" />
@@ -99,22 +120,44 @@
           {/if}
         </div>
 
-        <!-- Auth Action Buttons -->
-        <a
-          href="/login"
-          class="hidden sm:flex items-center space-x-1.5 px-4 py-2 rounded-xl text-xs font-semibold text-garden-text hover:text-white hover:bg-garden-surface transition-colors"
-        >
-          <LogIn class="w-3.5 h-3.5" />
-          <span>Acceder</span>
-        </a>
+        <!-- Auth Action Buttons: Logged In vs Logged Out -->
+        {#if userSession}
+          <!-- Authenticated User Menu -->
+          <a
+            href="/app"
+            class="hidden sm:flex items-center space-x-1.5 px-3 py-2 rounded-xl text-xs font-semibold bg-garden-surface border border-garden-border text-white hover:border-emerald-500 transition-colors"
+          >
+            <User class="w-3.5 h-3.5 text-emerald-400" />
+            <span class="truncate max-w-[120px]">{userSession.user.email}</span>
+          </a>
 
-        <a
-          href="/register"
-          class="flex items-center space-x-1.5 px-4 py-2 rounded-xl text-xs font-bold bg-emerald-500 hover:bg-emerald-400 text-slate-950 transition-all shadow-md shadow-emerald-500/20"
-        >
-          <UserPlus class="w-3.5 h-3.5" />
-          <span>Crear Jardín</span>
-        </a>
+          <button
+            on:click={handleLogout}
+            class="flex items-center space-x-1.5 px-3 py-2 rounded-xl text-xs font-semibold bg-red-500/15 hover:bg-red-500/25 text-red-300 border border-red-500/30 transition-all"
+            title="Cerrar Sesión"
+          >
+            <LogOut class="w-3.5 h-3.5" />
+            <span>Salir</span>
+          </button>
+        {:else}
+          <!-- Guest Navigation Buttons -->
+          <a
+            href="/login"
+            class="hidden sm:flex items-center space-x-1.5 px-4 py-2 rounded-xl text-xs font-semibold text-garden-text hover:text-white hover:bg-garden-surface transition-colors"
+          >
+            <LogIn class="w-3.5 h-3.5" />
+            <span>Acceder</span>
+          </a>
+
+          <a
+            href="/register"
+            class="flex items-center space-x-1.5 px-4 py-2 rounded-xl text-xs font-bold bg-emerald-500 hover:bg-emerald-400 text-slate-950 transition-all shadow-md shadow-emerald-500/20"
+          >
+            <UserPlus class="w-3.5 h-3.5" />
+            <span>Crear Jardín</span>
+          </a>
+        {/if}
+
       </div>
     </div>
   </header>

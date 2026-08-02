@@ -43,7 +43,8 @@
   }
 
   function copyPublicUrl() {
-    navigator.clipboard.writeText(`${window.location.origin}/u/demo/${note.slug}`);
+    const url = `${window.location.origin}/u/demo#${note.slug}`;
+    navigator.clipboard.writeText(url);
     copiedLink = true;
     setTimeout(() => copiedLink = false, 2000);
   }
