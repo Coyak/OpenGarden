@@ -4,10 +4,10 @@
   import { browser } from '$app/environment';
   import { Sparkles, Palette, BookOpen, Compass, LogIn, UserPlus, LogOut, Sprout, Network, FolderTree, LayoutDashboard, User } from 'lucide-svelte';
   import { supabase, isSupabaseConfigured } from '$lib/supabase/client';
+  import { currentUserStore, clearUserSession, setUserSession } from '$lib/stores/auth';
 
   let currentTheme: string = 'obsidian';
   let showThemeDropdown = false;
-  let userSession: any = null;
 
   const themes: { id: string; name: string; iconColor: string }[] = [
     { id: 'obsidian', name: 'Obsidian Warm', iconColor: 'bg-emerald-500' },
@@ -26,10 +26,10 @@
   }
 
   async function handleLogout() {
+    clearUserSession();
     if (browser && isSupabaseConfigured()) {
       await supabase.auth.signOut();
     }
-    userSession = null;
     if (browser) {
       window.location.href = '/';
     }
@@ -45,11 +45,25 @@
 
     if (isSupabaseConfigured()) {
       supabase.auth.getSession().then(({ data }) => {
-        userSession = data?.session || null;
+        if (data?.session?.user) {
+          const u = data.session.user;
+          setUserSession({
+            email: u.email || '',
+            username: u.user_metadata?.username || u.email?.split('@')[0] || 'usuario'
+          });
+        }
       });
 
       const { data: authListener } = supabase.auth.onAuthStateChange((_event, session) => {
-        userSession = session;
+        if (session?.user) {
+          const u = session.user;
+          setUserSession({
+            email: u.email || '',
+            username: u.user_metadata?.username || u.email?.split('@')[0] || 'usuario'
+          });
+        } else if (_event === 'SIGNED_OUT') {
+          clearUserSession();
+        }
       });
 
       return () => {
@@ -129,14 +143,14 @@
         </div>
 
         <!-- Auth Action Buttons: Logged In vs Logged Out -->
-        {#if userSession}
+        {#if $currentUserStore}
           <!-- Authenticated User Menu -->
           <a
             href="/app"
-            class="hidden sm:flex items-center space-x-1.5 px-3 py-2 rounded-xl text-xs font-semibold bg-garden-surface border border-garden-border text-white hover:border-emerald-500 transition-colors"
+            class="flex items-center space-x-1.5 px-3 py-2 rounded-xl text-xs font-bold bg-garden-surface border border-emerald-500/40 text-emerald-300 hover:bg-garden-card transition-colors shadow-sm"
           >
             <User class="w-3.5 h-3.5 text-emerald-400" />
-            <span class="truncate max-w-[120px]">{userSession.user.email}</span>
+            <span class="truncate max-w-[130px]">@{$currentUserStore.username || 'usuario'}</span>
           </a>
 
           <button
@@ -145,7 +159,7 @@
             title="Cerrar Sesión"
           >
             <LogOut class="w-3.5 h-3.5" />
-            <span>Salir</span>
+            <span class="hidden sm:inline">Salir</span>
           </button>
         {:else}
           <!-- Guest Navigation Buttons -->

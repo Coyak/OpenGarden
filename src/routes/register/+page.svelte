@@ -1,6 +1,7 @@
 <script lang="ts">
   import { Github, Mail, Lock, User, ArrowRight, Sparkles } from 'lucide-svelte';
   import { supabase, isSupabaseConfigured } from '$lib/supabase/client';
+  import { setUserSession } from '$lib/stores/auth';
 
   let username = '';
   let email = '';
@@ -11,36 +12,43 @@
   async function handleRegister() {
     loading = true;
     errorMessage = '';
-    const cleanUsername = username.toLowerCase().trim().replace(/[^a-z0-9_]/g, '');
+    const cleanUsername = username.toLowerCase().trim().replace(/[^a-z0-9_]/g, '') || 'usuario';
 
-    // If Supabase environment variables are missing/unconfigured, safely enter onboarding without fetch error
-    if (!isSupabaseConfigured()) {
-      setTimeout(() => {
-        window.location.href = '/onboarding';
-      }, 300);
-      return;
-    }
-
-    const { error } = await supabase.auth.signUp({
-      email,
-      password,
-      options: {
-        data: {
-          username: cleanUsername,
-          full_name: cleanUsername
-        }
-      }
+    // Store user session in authStore
+    setUserSession({
+      email: email || `${cleanUsername}@opengarden.io`,
+      username: cleanUsername
     });
 
-    if (error) {
-      errorMessage = error.message;
-      loading = false;
-    } else {
-      window.location.href = '/onboarding';
+    if (isSupabaseConfigured()) {
+      const { error } = await supabase.auth.signUp({
+        email,
+        password,
+        options: {
+          data: {
+            username: cleanUsername,
+            full_name: cleanUsername
+          }
+        }
+      });
+      if (error) {
+        errorMessage = error.message;
+        loading = false;
+        return;
+      }
     }
+
+    setTimeout(() => {
+      window.location.href = '/onboarding';
+    }, 300);
   }
 
   async function handleOAuth(provider: 'github' | 'google') {
+    setUserSession({
+      email: `user_${provider}@opengarden.io`,
+      username: `jardinero_${provider}`
+    });
+
     if (!isSupabaseConfigured()) {
       window.location.href = '/app';
       return;
@@ -70,7 +78,7 @@
     {#if !isSupabaseConfigured()}
       <div class="p-2.5 rounded-xl bg-emerald-500/10 border border-emerald-500/30 text-emerald-300 text-xs flex items-center space-x-2">
         <Sparkles class="w-4 h-4 flex-shrink-0 text-emerald-400" />
-        <span><strong>Modo Vista Previa:</strong> Ingresa tus datos para comenzar el onboarding.</span>
+        <span>Ingresa tu usuario y correo para personalizar tu Jardín Digital.</span>
       </div>
     {/if}
 
