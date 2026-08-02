@@ -1,6 +1,6 @@
 <script lang="ts">
-  import { Github, Mail, Lock, ArrowRight, ShieldCheck } from 'lucide-svelte';
-  import { supabase } from '$lib/supabase/client';
+  import { Github, Mail, Lock, ArrowRight, ShieldCheck, Sparkles } from 'lucide-svelte';
+  import { supabase, isSupabaseConfigured } from '$lib/supabase/client';
 
   let email = '';
   let password = '';
@@ -10,6 +10,14 @@
   async function handleLogin() {
     loading = true;
     errorMessage = '';
+
+    // If Supabase environment variables are missing/unconfigured, safely enter app in demo mode without fetch error
+    if (!isSupabaseConfigured()) {
+      setTimeout(() => {
+        window.location.href = '/app';
+      }, 300);
+      return;
+    }
 
     const { error } = await supabase.auth.signInWithPassword({ email, password });
     if (error) {
@@ -21,6 +29,10 @@
   }
 
   async function handleOAuth(provider: 'github' | 'google') {
+    if (!isSupabaseConfigured()) {
+      window.location.href = '/app';
+      return;
+    }
     await supabase.auth.signInWithOAuth({
       provider,
       options: { redirectTo: `${window.location.origin}/app` }
@@ -45,6 +57,13 @@
       <h1 class="text-2xl font-extrabold text-white">Bienvenido de nuevo</h1>
       <p class="text-xs text-garden-muted mt-1">Accede a tu Jardín Digital de Conocimiento</p>
     </div>
+
+    {#if !isSupabaseConfigured()}
+      <div class="p-2.5 rounded-xl bg-emerald-500/10 border border-emerald-500/30 text-emerald-300 text-xs flex items-center space-x-2">
+        <Sparkles class="w-4 h-4 flex-shrink-0 text-emerald-400" />
+        <span><strong>Modo Vista Previa:</strong> Ingresa tus datos para acceder directamente al Dashboard.</span>
+      </div>
+    {/if}
 
     {#if errorMessage}
       <div class="p-3 rounded-xl bg-red-500/10 border border-red-500/30 text-red-400 text-xs font-medium text-center">

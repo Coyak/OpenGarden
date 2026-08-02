@@ -1,6 +1,6 @@
 <script lang="ts">
-  import { Github, Mail, Lock, User, ArrowRight } from 'lucide-svelte';
-  import { supabase } from '$lib/supabase/client';
+  import { Github, Mail, Lock, User, ArrowRight, Sparkles } from 'lucide-svelte';
+  import { supabase, isSupabaseConfigured } from '$lib/supabase/client';
 
   let username = '';
   let email = '';
@@ -12,6 +12,14 @@
     loading = true;
     errorMessage = '';
     const cleanUsername = username.toLowerCase().trim().replace(/[^a-z0-9_]/g, '');
+
+    // If Supabase environment variables are missing/unconfigured, safely enter onboarding without fetch error
+    if (!isSupabaseConfigured()) {
+      setTimeout(() => {
+        window.location.href = '/onboarding';
+      }, 300);
+      return;
+    }
 
     const { error } = await supabase.auth.signUp({
       email,
@@ -33,6 +41,10 @@
   }
 
   async function handleOAuth(provider: 'github' | 'google') {
+    if (!isSupabaseConfigured()) {
+      window.location.href = '/app';
+      return;
+    }
     await supabase.auth.signInWithOAuth({
       provider,
       options: { redirectTo: `${window.location.origin}/app` }
@@ -54,6 +66,13 @@
       <h1 class="text-2xl font-extrabold text-white">Crea tu Jardín Digital</h1>
       <p class="text-xs text-garden-muted mt-1">Define tu usuario y tu URL pública en segundos</p>
     </div>
+
+    {#if !isSupabaseConfigured()}
+      <div class="p-2.5 rounded-xl bg-emerald-500/10 border border-emerald-500/30 text-emerald-300 text-xs flex items-center space-x-2">
+        <Sparkles class="w-4 h-4 flex-shrink-0 text-emerald-400" />
+        <span><strong>Modo Vista Previa:</strong> Ingresa tus datos para comenzar el onboarding.</span>
+      </div>
+    {/if}
 
     {#if errorMessage}
       <div class="p-3 rounded-xl bg-red-500/10 border border-red-500/30 text-red-400 text-xs font-medium text-center">
