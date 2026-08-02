@@ -1,8 +1,9 @@
 <script lang="ts">
   import '../app.css';
   import { onMount } from 'svelte';
+  import { browser } from '$app/environment';
   import { Sparkles, Palette, BookOpen, Compass, LogIn, UserPlus, LogOut, Sprout, Network, FolderTree, LayoutDashboard, User } from 'lucide-svelte';
-  import { supabase } from '$lib/supabase/client';
+  import { supabase, isSupabaseConfigured } from '$lib/supabase/client';
 
   let currentTheme: string = 'obsidian';
   let showThemeDropdown = false;
@@ -17,7 +18,7 @@
 
   function setTheme(theme: string) {
     currentTheme = theme;
-    if (typeof document !== 'undefined') {
+    if (browser) {
       document.documentElement.setAttribute('data-theme', theme);
       localStorage.setItem('opengarden-theme', theme);
     }
@@ -25,29 +26,36 @@
   }
 
   async function handleLogout() {
-    await supabase.auth.signOut();
+    if (browser && isSupabaseConfigured()) {
+      await supabase.auth.signOut();
+    }
     userSession = null;
-    window.location.href = '/';
+    if (browser) {
+      window.location.href = '/';
+    }
   }
 
   onMount(() => {
+    if (!browser) return;
+
     const savedTheme = localStorage.getItem('opengarden-theme');
     if (savedTheme && themes.some(t => t.id === savedTheme)) {
       setTheme(savedTheme);
     }
 
-    // Check active session and listen to auth changes
-    supabase.auth.getSession().then(({ data }) => {
-      userSession = data.session;
-    });
+    if (isSupabaseConfigured()) {
+      supabase.auth.getSession().then(({ data }) => {
+        userSession = data?.session || null;
+      });
 
-    const { data: authListener } = supabase.auth.onAuthStateChange((_event, session) => {
-      userSession = session;
-    });
+      const { data: authListener } = supabase.auth.onAuthStateChange((_event, session) => {
+        userSession = session;
+      });
 
-    return () => {
-      authListener?.subscription.unsubscribe();
-    };
+      return () => {
+        authListener?.subscription?.unsubscribe();
+      };
+    }
   });
 </script>
 
