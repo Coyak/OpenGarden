@@ -5,191 +5,232 @@
 @layer base {
   /* Default: Obsidian Sage (Organic Paper Dark) */
   :root, [data-theme="obsidian"] {
-    --bg-main: #111319;
-    --bg-surface: #191c24;
-    --bg-card: #212530;
-    --border-color: #2b3140;
-    --text-main: #edf0f5;
-    --text-muted: #8e9bb0;
+    --bg-main: #0c0e12;
+    --bg-surface: #131720;
+    --bg-card: #1b202c;
+    --border-color: #272f3f;
+    --text-main: #f0f3f8;
+    --text-muted: #8898ab;
     --accent: #10b981; /* Sage Emerald */
     --accent-glow: rgba(16, 185, 129, 0.15);
     --node-seed: #10b981;
     --node-growing: #38bdf8;
     --node-evergreen: #a855f7;
+    --bg-surface-rgb: 19, 23, 32;
   }
 
   /* Forest Warm */
   [data-theme="forest"] {
-    --bg-main: #0c1410;
-    --bg-surface: #14201a;
-    --bg-card: #1c2b23;
-    --border-color: #283d32;
-    --text-main: #f0fdf4;
-    --text-muted: #86efac;
+    --bg-main: #070d0a;
+    --bg-surface: #0e1713;
+    --bg-card: #15241e;
+    --border-color: #21392e;
+    --text-main: #ecfdf5;
+    --text-muted: #78ab92;
     --accent: #22c55e;
     --accent-glow: rgba(34, 197, 94, 0.15);
     --node-seed: #4ade80;
     --node-growing: #06b6d4;
     --node-evergreen: #a3e635;
+    --bg-surface-rgb: 14, 23, 19;
   }
 
   /* Sakura Slate */
   [data-theme="sakura"] {
-    --bg-main: #171116;
-    --bg-surface: #221a21;
-    --bg-card: #2e232d;
-    --border-color: #40323e;
+    --bg-main: #140d12;
+    --bg-surface: #1d141b;
+    --bg-card: #281d26;
+    --border-color: #3b2b38;
     --text-main: #fdf2f8;
-    --text-muted: #f472b6;
+    --text-muted: #d975a5;
     --accent: #f43f5e;
     --accent-glow: rgba(244, 63, 94, 0.15);
     --node-seed: #fb7185;
     --node-growing: #38bdf8;
     --node-evergreen: #c084fc;
+    --bg-surface-rgb: 29, 20, 27;
   }
 
   /* Cyberpunk Minimal */
   [data-theme="cyberpunk"] {
-    --bg-main: #0b0c12;
-    --bg-surface: #13141f;
-    --bg-card: #16162a;
-    --border-color: #2b2d45;
-    --text-main: #f8fafc;
+    --bg-main: #06070a;
+    --bg-surface: #0d0e14;
+    --bg-card: #121422;
+    --border-color: #22253d;
+    --text-main: #f1f5f9;
     --text-muted: #38bdf8;
     --accent: #0ea5e9;
     --accent-glow: rgba(14, 165, 233, 0.15);
     --node-seed: #eab308;
     --node-growing: #0ea5e9;
     --node-evergreen: #f43f5e;
+    --bg-surface-rgb: 13, 14, 20;
+  }
+
+  /* Midnight Moss */
+  [data-theme="moss"] {
+    --bg-main: #050806;
+    --bg-surface: #0b110d;
+    --bg-card: #131c16;
+    --border-color: #1e2c22;
+    --text-main: #e8f0eb;
+    --text-muted: #7ca388;
+    --accent: #cda250; /* Antique Gold */
+    --accent-glow: rgba(205, 162, 80, 0.15);
+    --node-seed: #10b981;
+    --node-growing: #fbbf24;
+    --node-evergreen: #f59e0b;
+    --bg-surface-rgb: 11, 17, 13;
+  }
+
+  /* Sepia Parchment (Warm Light Theme) */
+  [data-theme="parchment"] {
+    --bg-main: #faf7f2;
+    --bg-surface: #f2ebd9;
+    --bg-card: #e5dac2;
+    --border-color: #cbbba0;
+    --text-main: #231b15;
+    --text-muted: #5e5043;
+    --accent: #b84327; /* Terracotta Rust */
+    --accent-glow: rgba(184, 67, 39, 0.15);
+    --node-seed: #0f766e; /* Darker Teal Green */
+    --node-growing: #1d4ed8; /* Darker blue */
+    --node-evergreen: #6d28d9; /* Darker purple */
+    --bg-surface-rgb: 242, 235, 217;
   }
 
   body {
     background-color: var(--bg-main);
     color: var(--text-main);
-    font-family: 'Inter', system-ui, sans-serif;
+    font-family: 'Plus Jakarta Sans', system-ui, -apple-system, sans-serif;
     overflow-x: hidden;
-    transition: background-color 0.25s ease, color 0.25s ease;
+    transition: background-color 0.3s cubic-bezier(0.4, 0, 0.2, 1), color 0.3s cubic-bezier(0.4, 0, 0.2, 1);
   }
 }
 
 /* NOTION MARKDOWN TYPOGRAPHY & FULL GFM SPEC STYLES */
 .prose {
-  color: #e2e8f0;
+  color: var(--text-main) !important;
   max-width: 100%;
 }
 
 .prose h1 {
-  font-size: 1.875rem !important; /* 30px */
-  line-height: 2.25rem !important;
+  font-size: 2.1rem !important;
+  line-height: 1.25 !important;
   font-weight: 800 !important;
-  color: #ffffff !important;
-  margin-top: 1.5rem !important;
-  margin-bottom: 0.75rem !important;
+  color: var(--text-main) !important;
+  font-family: 'Lora', Georgia, serif !important;
+  margin-top: 2rem !important;
+  margin-bottom: 0.85rem !important;
   letter-spacing: -0.02em !important;
 }
 
 .prose h2 {
-  font-size: 1.375rem !important; /* 22px */
-  line-height: 1.75rem !important;
+  font-size: 1.55rem !important;
+  line-height: 1.35 !important;
   font-weight: 700 !important;
-  color: #f8fafc !important;
-  margin-top: 1.25rem !important;
-  margin-bottom: 0.5rem !important;
+  color: var(--text-main) !important;
+  font-family: 'Lora', Georgia, serif !important;
+  margin-top: 1.6rem !important;
+  margin-bottom: 0.65rem !important;
   letter-spacing: -0.01em !important;
 }
 
 .prose h3 {
-  font-size: 1.125rem !important; /* 18px */
-  line-height: 1.5rem !important;
+  font-size: 1.25rem !important;
+  line-height: 1.4 !important;
   font-weight: 600 !important;
-  color: #f1f5f9 !important;
-  margin-top: 1rem !important;
+  color: var(--text-main) !important;
+  font-family: 'Lora', Georgia, serif !important;
+  margin-top: 1.3rem !important;
   margin-bottom: 0.5rem !important;
 }
 
 .prose h4, .prose h5, .prose h6 {
-  font-size: 1rem !important;
+  font-size: 1.05rem !important;
   font-weight: 600 !important;
-  color: #cbd5e1 !important;
-  margin-top: 0.75rem !important;
-  margin-bottom: 0.25rem !important;
+  color: var(--text-main) !important;
+  margin-top: 1rem !important;
+  margin-bottom: 0.35rem !important;
 }
 
 .prose p {
-  margin-top: 0.5rem !important;
-  margin-bottom: 0.5rem !important;
-  line-height: 1.625 !important;
-  color: #cbd5e1 !important;
+  margin-top: 0.65rem !important;
+  margin-bottom: 0.65rem !important;
+  line-height: 1.75 !important;
+  color: var(--text-main) !important;
+  opacity: 0.9;
 }
 
 .prose ul {
   list-style-type: disc !important;
   padding-left: 1.5rem !important;
-  margin-top: 0.5rem !important;
-  margin-bottom: 0.5rem !important;
+  margin-top: 0.65rem !important;
+  margin-bottom: 0.65rem !important;
 }
 
 .prose ol {
   list-style-type: decimal !important;
   padding-left: 1.5rem !important;
-  margin-top: 0.5rem !important;
-  margin-bottom: 0.5rem !important;
+  margin-top: 0.65rem !important;
+  margin-bottom: 0.65rem !important;
 }
 
 .prose li {
-  margin-top: 0.25rem !important;
-  margin-bottom: 0.25rem !important;
-  color: #e2e8f0 !important;
+  margin-top: 0.3rem !important;
+  margin-bottom: 0.3rem !important;
+  line-height: 1.7 !important;
 }
 
 .prose blockquote {
   border-left: 4px solid var(--accent) !important;
-  padding-left: 1rem !important;
-  margin-top: 1rem !important;
-  margin-bottom: 1rem !important;
+  background: linear-gradient(to right, var(--accent-glow), transparent) !important;
+  padding: 0.75rem 1.25rem !important;
+  margin: 1.25rem 0 !important;
   font-style: italic !important;
-  color: var(--text-muted) !important;
-  background: var(--bg-surface) !important;
-  padding-top: 0.5rem !important;
-  padding-bottom: 0.5rem !important;
-  border-radius: 0 0.5rem 0.5rem 0 !important;
+  border-radius: 0 0.75rem 0.75rem 0 !important;
+  color: var(--text-main) !important;
+  opacity: 0.95;
 }
 
 .prose a.markdown-link {
-  color: #38bdf8 !important;
+  color: var(--accent) !important;
   font-weight: 600 !important;
   text-decoration: underline !important;
   text-underline-offset: 4px !important;
-  transition: color 0.2s ease !important;
+  transition: opacity 0.2s ease !important;
 }
 
 .prose a.markdown-link:hover {
-  color: #7dd3fc !important;
+  opacity: 0.8;
 }
 
 .prose a.wikilink {
-  color: #10b981 !important;
+  color: var(--accent) !important;
   font-weight: 600 !important;
-  text-decoration: underline !important;
-  text-underline-offset: 4px !important;
-  text-decoration-color: rgba(16, 185, 129, 0.5) !important;
-  transition: color 0.2s ease !important;
+  background: var(--accent-glow);
+  padding: 0.1rem 0.35rem;
+  border-radius: 0.35rem;
+  border-bottom: 1px dashed var(--accent);
+  text-decoration: none !important;
+  transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1) !important;
 }
 
 .prose a.wikilink:hover {
-  color: #34d399 !important;
+  filter: brightness(1.15);
+  box-shadow: 0 2px 8px var(--accent-glow);
 }
 
 .prose hr {
   border: 0 !important;
   border-top: 1px solid var(--border-color) !important;
-  margin: 1.5rem 0 !important;
+  margin: 1.75rem 0 !important;
 }
 
 /* Custom minimal scrollbar */
 ::-webkit-scrollbar {
-  width: 5px;
-  height: 5px;
+  width: 6px;
+  height: 6px;
 }
 ::-webkit-scrollbar-track {
   background: transparent;
@@ -202,17 +243,80 @@
   background: var(--text-muted);
 }
 
-/* Clean Notion-style card panel */
+/* Premium Card Panel */
 .notion-panel {
   background: var(--bg-surface);
   border: 1px solid var(--border-color);
-  border-radius: 0.875rem;
+  border-radius: 1rem;
+  box-shadow: 0 4px 20px -2px rgba(0, 0, 0, 0.15);
 }
 
-/* Glassmorphism clean utility */
+/* Enhanced Glassmorphism Panel */
 .glass-panel {
-  background: rgba(25, 28, 36, 0.75);
-  backdrop-filter: blur(12px);
-  -webkit-backdrop-filter: blur(12px);
+  background: rgba(var(--bg-surface-rgb), 0.7);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
   border: 1px solid var(--border-color);
+  box-shadow: 0 10px 40px -10px rgba(0, 0, 0, 0.3);
 }
+
+/* Sepia theme adjustments */
+[data-theme="parchment"] .glass-panel {
+  background: rgba(244, 240, 230, 0.85);
+  border: 1px solid rgba(43, 35, 28, 0.12);
+  box-shadow: 0 10px 30px -10px rgba(122, 106, 93, 0.15);
+}
+[data-theme="parchment"] .notion-panel {
+  background: var(--bg-surface);
+  border: 1px solid rgba(43, 35, 28, 0.12);
+  box-shadow: 0 4px 15px -2px rgba(122, 106, 93, 0.1);
+}
+
+/* D3 Graph animations */
+@keyframes d3-flow {
+  to {
+    stroke-dashoffset: -20;
+  }
+}
+
+.d3-link-animated {
+  stroke-dasharray: 4, 4;
+  animation: d3-flow 1.5s linear infinite;
+}
+
+@keyframes pulse-glow {
+  0%, 100% {
+    filter: drop-shadow(0 0 2px var(--glow-color, var(--accent)));
+  }
+  50% {
+    filter: drop-shadow(0 0 8px var(--glow-color, var(--accent)));
+  }
+}
+
+.node-glow {
+  animation: pulse-glow 3s ease-in-out infinite;
+}
+
+/* Compact layout for Zettelkasten block-based editor canvas */
+.live-editor-canvas .prose p,
+.live-editor-canvas .prose h1,
+.live-editor-canvas .prose h2,
+.live-editor-canvas .prose h3,
+.live-editor-canvas .prose ul,
+.live-editor-canvas .prose ol,
+.live-editor-canvas .prose blockquote {
+  margin-top: 0.15rem !important;
+  margin-bottom: 0.15rem !important;
+}
+
+.live-editor-canvas .prose ul,
+.live-editor-canvas .prose ol {
+  padding-left: 0.5rem !important;
+}
+
+/* Simulated multi-block text selection styling */
+.is-all-selected,
+.is-all-selected * {
+  background-color: rgba(59, 130, 246, 0.25) !important;
+}
+

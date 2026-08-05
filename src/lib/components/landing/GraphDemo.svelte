@@ -40,10 +40,10 @@
 
   function getStageColor(stage: string): string {
     switch (stage) {
-      case 'seed': return '#10b981';      // Emerald
-      case 'growing': return '#38bdf8';   // Sky blue
-      case 'evergreen': return '#a855f7'; // Purple
-      default: return '#6366f1';
+      case 'seed': return 'var(--node-seed, #10b981)';
+      case 'growing': return 'var(--node-growing, #38bdf8)';
+      case 'evergreen': return 'var(--node-evergreen, #a855f7)';
+      default: return 'var(--accent, #6366f1)';
     }
   }
 
@@ -62,6 +62,23 @@
     const svg = d3.select(svgElement);
     svg.selectAll('*').remove();
 
+    // Append glow filters
+    const defs = svg.append('defs');
+    const filter = defs.append('filter')
+      .attr('id', 'demo-glow')
+      .attr('x', '-20%')
+      .attr('y', '-20%')
+      .attr('width', '140%')
+      .attr('height', '140%');
+    
+    filter.append('feGaussianBlur')
+      .attr('stdDeviation', '4')
+      .attr('result', 'blur');
+      
+    const feMerge = filter.append('feMerge');
+    feMerge.append('feMergeNode').attr('in', 'blur');
+    feMerge.append('feMergeNode').attr('in', 'SourceGraphic');
+
     simulation = d3.forceSimulation(nodesData as any)
       .force('link', d3.forceLink(linksData as any).id((d: any) => d.id).distance(100))
       .force('charge', d3.forceManyBody().strength(-280))
@@ -74,10 +91,10 @@
       .data(linksData)
       .enter()
       .append('line')
-      .attr('stroke', '#38bdf8')
-      .attr('stroke-opacity', 0.55)
-      .attr('stroke-width', 1.8)
-      .attr('stroke-dasharray', '4 2');
+      .attr('stroke', 'var(--accent)')
+      .attr('stroke-opacity', 0.45)
+      .attr('stroke-width', 2)
+      .attr('class', 'd3-link-animated');
 
     // Render Dragable Node Groups (Obsidian Style)
     const nodeGroup = svg.append('g').attr('class', 'nodes');
@@ -112,22 +129,24 @@
     nodeElements.append('circle')
       .attr('r', (d: any) => d.val * 1.5)
       .attr('fill', (d: any) => getStageColor(d.stage))
-      .attr('opacity', 0.18);
+      .attr('opacity', 0.15);
 
     // Core Circle
     nodeElements.append('circle')
       .attr('r', (d: any) => d.val)
       .attr('fill', (d: any) => getStageColor(d.stage))
-      .attr('stroke', '#ffffff')
-      .attr('stroke-width', 1.5)
-      .attr('stroke-opacity', 0.8);
+      .attr('filter', (d: any) => d.stage === 'evergreen' ? 'url(#demo-glow)' : null)
+      .attr('stroke', 'var(--bg-main)')
+      .attr('stroke-width', 2)
+      .attr('class', (d: any) => d.stage === 'evergreen' ? 'node-glow' : '');
 
     // Text Label
     nodeElements.append('text')
       .text((d: any) => d.title)
-      .attr('y', (d: any) => d.val + 16)
+      .attr('y', (d: any) => d.val + 18)
       .attr('text-anchor', 'middle')
-      .attr('fill', '#ffffff')
+      .attr('fill', 'var(--text-main)')
+      .attr('opacity', 0.95)
       .attr('font-size', '11px')
       .attr('font-weight', '600')
       .attr('pointer-events', 'none');

@@ -223,7 +223,7 @@
               on:keydown={(e) => handleBlockKeyDown(e, i)}
               on:blur={() => activeBlockIndex = null}
               placeholder="Escribe algo o usa # Título, - Lista, > Cita..."
-              class="w-full bg-transparent text-slate-100 font-mono text-sm py-1 px-2 focus:outline-none border-l-2 border-emerald-500 bg-garden-surface/30 rounded-r-lg"
+              class="w-full bg-transparent text-garden-text font-mono text-sm py-1 px-2 focus:outline-none border-l-2 border-emerald-500 bg-garden-surface/30 rounded-r-lg"
             />
           </div>
         {:else}
@@ -232,7 +232,7 @@
           <!-- svelte-ignore a11y-no-static-element-interactions -->
           <div
             on:click={(e) => handleBlockClick(e, i)}
-            class="py-1 px-2 rounded-lg hover:bg-garden-surface/40 cursor-text transition-colors text-slate-200 text-sm leading-relaxed prose prose-invert max-w-none"
+            class="py-1 px-2 rounded-lg hover:bg-garden-surface/40 cursor-text transition-colors text-garden-text text-sm leading-relaxed prose max-w-none"
           >
             {#if !blockText || blockText.trim() === ''}
               <span class="text-garden-muted/40 italic font-mono text-xs">Escribe algo...</span>

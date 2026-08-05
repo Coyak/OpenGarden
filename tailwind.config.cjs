@@ -17,10 +17,12 @@ module.exports = {
           seed: '#10b981',      // 🌱 Green emerald
           growing: '#3b82f6',   // 🌿 Blue azure
           evergreen: '#8b5cf6'  // 🌲 Violet purple
-        }
+        },
+        white: 'var(--text-main)'
       },
       fontFamily: {
-        sans: ['Inter', 'system-ui', 'sans-serif'],
+        sans: ['Plus Jakarta Sans', 'system-ui', 'sans-serif'],
+        serif: ['Lora', 'Georgia', 'serif'],
         mono: ['JetBrains Mono', 'monospace']
       },
       boxShadow: {

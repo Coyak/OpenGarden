@@ -185,13 +185,13 @@
     </div>
 
     <!-- Search Input -->
-    <div class="relative">
-      <Search class="w-3.5 h-3.5 text-garden-muted absolute left-2.5 top-2.5" />
+    <div class="relative group">
+      <Search class="w-3.5 h-3.5 text-garden-muted absolute left-2.5 top-2.5 group-focus-within:text-emerald-400 transition-colors" />
       <input
         type="text"
         bind:value={searchQuery}
         placeholder="Buscar nota o carpeta..."
-        class="w-full pl-8 pr-3 py-1.5 rounded-lg bg-garden-surface border border-garden-border text-xs text-white placeholder:text-garden-muted/60 focus:outline-none focus:border-emerald-500 transition-colors"
+        class="w-full pl-8 pr-3 py-1.5 rounded-xl bg-garden-surface/80 border border-garden-border text-xs text-garden-text placeholder:text-garden-muted/75 focus:outline-none focus:border-emerald-500/60 focus:bg-garden-card focus:shadow-[0_0_12px_var(--accent-glow)] transition-all duration-200"
       />
     </div>
   </div>
@@ -207,7 +207,7 @@
 
       <!-- svelte-ignore a11y-no-static-element-interactions -->
       <div 
-        class="space-y-0.5 rounded-xl transition-all duration-200 {isDragOver ? 'bg-emerald-500/20 border-2 border-dashed border-emerald-400 p-1' : ''}"
+        class="space-y-0.5 rounded-2xl transition-all duration-200 {isDragOver ? 'bg-emerald-500/10 border border-dashed border-emerald-500/50 p-1.5 shadow-[0_0_15px_var(--accent-glow)]' : ''}"
         on:dragover={(e) => handleDragOver(e, folder.id)}
         on:dragleave={handleDragLeave}
         on:drop={(e) => handleDrop(e, folder.id)}
@@ -264,7 +264,7 @@
 
         <!-- Nested Draggable Folder Items -->
         {#if isExpanded}
-          <div class="pl-5 space-y-0.5 border-l border-garden-border/50 ml-3">
+          <div class="pl-5 space-y-1.5 border-l-2 border-dashed border-garden-border/30 hover:border-emerald-500/20 ml-3.5 transition-all duration-300">
             {#if folderNotes.length === 0}
               <div class="py-1 px-2 text-[11px] text-garden-muted/60 italic">Arrastra notas aquí</div>
             {:else}
@@ -331,7 +331,7 @@
     <!-- Uncategorized Notes Root Level Drop Target -->
     <!-- svelte-ignore a11y-no-static-element-interactions -->
     <div 
-      class="pt-2 rounded-xl transition-all duration-200 {dragOverFolderId === 'uncategorized' ? 'bg-sky-500/20 border-2 border-dashed border-sky-400 p-1' : ''}"
+      class="pt-2 rounded-2xl transition-all duration-200 {dragOverFolderId === 'uncategorized' ? 'bg-emerald-500/10 border border-dashed border-emerald-500/50 p-1.5 shadow-[0_0_15px_var(--accent-glow)]' : ''}"
       on:dragover={(e) => handleDragOver(e, 'uncategorized')}
       on:dragleave={handleDragLeave}
       on:drop={(e) => handleDrop(e, null)}

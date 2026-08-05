@@ -156,27 +156,27 @@
           <div class="grid grid-cols-2 gap-1 text-[11px]">
             <button
               on:click={() => filterStage = 'all'}
-              class="px-2 py-1.5 rounded-lg font-medium transition-all text-center {filterStage === 'all' ? 'bg-garden-card text-white font-bold border border-garden-border' : 'text-garden-muted hover:text-white'}"
+              class="px-2 py-1.5 rounded-lg font-medium transition-all text-center {filterStage === 'all' ? 'bg-garden-card text-garden-text font-bold border border-garden-border' : 'text-garden-muted hover:text-garden-text'}"
             >
               Todas
             </button>
             <button
               on:click={() => filterStage = 'seed'}
-              class="px-2 py-1.5 rounded-lg font-medium transition-all text-center flex items-center justify-center space-x-1 {filterStage === 'seed' ? 'bg-emerald-500/20 text-emerald-300 font-bold border border-emerald-500/40' : 'text-garden-muted hover:text-white'}"
+              class="px-2 py-1.5 rounded-lg font-medium transition-all text-center flex items-center justify-center space-x-1 {filterStage === 'seed' ? 'bg-emerald-500/10 dark:bg-emerald-500/20 text-emerald-700 dark:text-emerald-300 font-bold border border-emerald-500/30 dark:border-emerald-500/40' : 'text-garden-muted hover:text-garden-text'}"
             >
               <Sprout class="w-3 h-3 text-emerald-400" />
               <span>Efímeras</span>
             </button>
             <button
               on:click={() => filterStage = 'growing'}
-              class="px-2 py-1.5 rounded-lg font-medium transition-all text-center flex items-center justify-center space-x-1 {filterStage === 'growing' ? 'bg-sky-500/20 text-sky-300 font-bold border border-sky-500/40' : 'text-garden-muted hover:text-white'}"
+              class="px-2 py-1.5 rounded-lg font-medium transition-all text-center flex items-center justify-center space-x-1 {filterStage === 'growing' ? 'bg-sky-500/10 dark:bg-sky-500/20 text-sky-700 dark:text-sky-300 font-bold border border-sky-500/30 dark:border-sky-500/40' : 'text-garden-muted hover:text-garden-text'}"
             >
               <Leaf class="w-3 h-3 text-sky-400" />
               <span>Literatura</span>
             </button>
             <button
               on:click={() => filterStage = 'evergreen'}
-              class="px-2 py-1.5 rounded-lg font-medium transition-all text-center flex items-center justify-center space-x-1 {filterStage === 'evergreen' ? 'bg-purple-500/20 text-purple-300 font-bold border border-purple-500/40' : 'text-garden-muted hover:text-white'}"
+              class="px-2 py-1.5 rounded-lg font-medium transition-all text-center flex items-center justify-center space-x-1 {filterStage === 'evergreen' ? 'bg-purple-500/10 dark:bg-purple-500/20 text-purple-700 dark:text-purple-300 font-bold border border-purple-500/30 dark:border-purple-500/40' : 'text-garden-muted hover:text-garden-text'}"
             >
               <TreeDeciduous class="w-3 h-3 text-purple-400" />
               <span>Permanentes</span>
@@ -240,7 +240,7 @@
           </div>
 
           <!-- Processed Rendered Content -->
-          <div class="prose prose-invert max-w-none text-slate-200 leading-relaxed">
+          <div class="prose max-w-none text-garden-text leading-relaxed">
             {@html renderedContent}
           </div>
         </div>

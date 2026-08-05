@@ -2,27 +2,23 @@
   import '../app.css';
   import { onMount } from 'svelte';
   import { browser } from '$app/environment';
-  import { Sparkles, Palette, BookOpen, Compass, LogIn, UserPlus, LogOut, Sprout, Network, FolderTree, LayoutDashboard, User } from 'lucide-svelte';
+  import { Sparkles, Sun, Moon, BookOpen, Compass, LogIn, UserPlus, LogOut, Sprout, Network, FolderTree, LayoutDashboard, User } from 'lucide-svelte';
   import { supabase, isSupabaseConfigured } from '$lib/supabase/client';
   import { currentUserStore, clearUserSession, setUserSession } from '$lib/stores/auth';
 
-  let currentTheme: string = 'obsidian';
-  let showThemeDropdown = false;
+  let currentTheme: 'obsidian' | 'parchment' = 'obsidian';
 
-  const themes: { id: string; name: string; iconColor: string }[] = [
-    { id: 'obsidian', name: 'Obsidian Warm', iconColor: 'bg-emerald-500' },
-    { id: 'forest', name: 'Forest Green', iconColor: 'bg-green-500' },
-    { id: 'sakura', name: 'Sakura Slate', iconColor: 'bg-pink-500' },
-    { id: 'cyberpunk', name: 'Cyan Minimal', iconColor: 'bg-sky-400' }
-  ];
+  function toggleTheme() {
+    const nextTheme = currentTheme === 'obsidian' ? 'parchment' : 'obsidian';
+    setTheme(nextTheme);
+  }
 
-  function setTheme(theme: string) {
+  function setTheme(theme: 'obsidian' | 'parchment') {
     currentTheme = theme;
     if (browser) {
       document.documentElement.setAttribute('data-theme', theme);
       localStorage.setItem('opengarden-theme', theme);
     }
-    showThemeDropdown = false;
   }
 
   async function handleLogout() {
@@ -39,8 +35,10 @@
     if (!browser) return;
 
     const savedTheme = localStorage.getItem('opengarden-theme');
-    if (savedTheme && themes.some(t => t.id === savedTheme)) {
+    if (savedTheme === 'parchment' || savedTheme === 'obsidian') {
       setTheme(savedTheme);
+    } else {
+      setTheme('obsidian');
     }
 
     if (isSupabaseConfigured()) {
@@ -113,34 +111,20 @@
       <!-- Right Controls: Theme Switcher & Auth Buttons -->
       <div class="flex items-center space-x-3">
         
-        <!-- Theme Selector Dropdown -->
-        <div class="relative">
-          <button
-            on:click={() => showThemeDropdown = !showThemeDropdown}
-            class="p-2 rounded-xl glass-panel border border-garden-border text-garden-muted hover:text-white hover:border-garden-border transition-all flex items-center space-x-1.5 text-xs"
-            title="Cambiar Tema Visual"
-          >
-            <Palette class="w-4 h-4 text-emerald-400" />
-            <span class="capitalize hidden sm:inline">{currentTheme}</span>
-          </button>
-
-          {#if showThemeDropdown}
-            <div class="absolute right-0 mt-2 w-44 rounded-xl glass-panel border border-garden-border shadow-2xl p-1.5 z-50 animate-in fade-in slide-in-from-top-2">
-              <div class="px-2 py-1 text-[10px] font-bold uppercase tracking-wider text-garden-muted border-b border-garden-border/60 mb-1">
-                Selecciona Tema
-              </div>
-              {#each themes as theme}
-                <button
-                  on:click={() => setTheme(theme.id)}
-                  class="w-full text-left px-2.5 py-1.5 rounded-lg text-xs font-medium flex items-center justify-between hover:bg-garden-surface transition-colors {currentTheme === theme.id ? 'text-emerald-400 font-semibold bg-garden-surface/80' : 'text-garden-muted hover:text-white'}"
-                >
-                  <span class="capitalize">{theme.name}</span>
-                  <span class="w-2.5 h-2.5 rounded-full {theme.iconColor}"></span>
-                </button>
-              {/each}
-            </div>
+        <!-- Sun/Moon Theme Toggle Button -->
+        <button
+          on:click={toggleTheme}
+          class="p-2 rounded-xl glass-panel border border-garden-border text-garden-muted hover:text-white hover:border-garden-border transition-all flex items-center space-x-1.5 text-xs shadow-sm hover:scale-[1.03] active:scale-[0.97]"
+          title={currentTheme === 'obsidian' ? 'Cambiar a Modo Claro' : 'Cambiar a Modo Oscuro'}
+        >
+          {#if currentTheme === 'obsidian'}
+            <Sun class="w-4 h-4 text-amber-400" />
+            <span class="hidden sm:inline">Modo Claro</span>
+          {:else}
+            <Moon class="w-4 h-4 text-sky-400" />
+            <span class="hidden sm:inline">Modo Oscuro</span>
           {/if}
-        </div>
+        </button>
 
         <!-- Auth Action Buttons: Logged In vs Logged Out -->
         {#if $currentUserStore}

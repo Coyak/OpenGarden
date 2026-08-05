@@ -60,6 +60,36 @@
   let isRightPanelOpen: boolean = true;
   let inspectorTab: 'graph' | 'backlinks' = 'graph';
 
+  // Resizable Sidebars state variables & event handlers
+  let sidebarWidth = 280;
+  let rightPanelWidth = 320;
+  let isResizingLeft = false;
+  let isResizingRight = false;
+
+  function startResizingLeft(event: MouseEvent) {
+    event.preventDefault();
+    isResizingLeft = true;
+  }
+
+  function startResizingRight(event: MouseEvent) {
+    event.preventDefault();
+    isResizingRight = true;
+  }
+
+  function handleMouseMove(event: MouseEvent) {
+    if (isResizingLeft) {
+      sidebarWidth = Math.max(180, Math.min(450, event.clientX));
+    } else if (isResizingRight) {
+      const w = window.innerWidth - event.clientX;
+      rightPanelWidth = Math.max(200, Math.min(500, w));
+    }
+  }
+
+  function stopResizing() {
+    isResizingLeft = false;
+    isResizingRight = false;
+  }
+
   $: activeNote = notes.find(n => n.id === activeNoteId) || notes[0];
 
   $: extractedLinks = activeNote ? extractWikilinks(activeNote.content) : [];
@@ -156,11 +186,16 @@
   <title>Dashboard Zettelkasten | OpenGarden</title>
 </svelte:head>
 
-<div class="h-[calc(100vh-4.1rem)] flex overflow-hidden bg-garden-main">
+<svelte:window on:mousemove={handleMouseMove} on:mouseup={stopResizing} />
+
+<div class="h-[calc(100vh-4.1rem)] flex overflow-hidden bg-garden-main select-none">
   
   <!-- LEFT SIDEBAR: Nested Folder Tree with Drag and Drop -->
-  <aside class="{isSidebarOpen ? 'w-64 sm:w-72' : 'w-0 opacity-0 overflow-hidden'} transition-all duration-300 glass-panel border-r border-garden-border flex flex-col flex-shrink-0 relative z-20">
-    <div class="flex-grow overflow-hidden">
+  <aside 
+    style="width: {isSidebarOpen ? sidebarWidth : 0}px"
+    class="transition-[opacity] duration-300 glass-panel border-r border-garden-border flex flex-col flex-shrink-0 relative z-20 {!isSidebarOpen ? 'opacity-0 overflow-hidden' : ''}"
+  >
+    <div class="flex-grow overflow-hidden select-text">
       <FolderTree
         {folders}
         {notes}
@@ -185,7 +220,7 @@
 
       <button
         on:click={() => isSidebarOpen = false}
-        class="p-1 rounded hover:bg-garden-surface text-garden-muted hover:text-white"
+        class="p-1 rounded hover:bg-garden-surface text-garden-muted hover:text-garden-text"
         title="Ocultar Sidebar"
       >
         <PanelLeftClose class="w-4 h-4" />
@@ -193,14 +228,24 @@
     </div>
   </aside>
 
+  <!-- Left Sidebar Resizer Splitter -->
+  {#if isSidebarOpen}
+    <!-- svelte-ignore a11y-no-static-element-interactions -->
+    <div 
+      on:mousedown={startResizingLeft}
+      class="w-[3px] hover:w-[6px] cursor-col-resize hover:bg-emerald-500/40 bg-garden-border/40 transition-all flex-shrink-0 z-30 select-none"
+      title="Arrastra para cambiar el tamaño"
+    ></div>
+  {/if}
+
   <!-- CENTER CANVAS: Notion Live Markdown Editor -->
-  <main class="flex-grow flex flex-col min-w-0 bg-garden-main relative">
+  <main class="flex-grow flex flex-col min-w-0 bg-garden-main relative select-text">
     
     <!-- Floating Show Sidebar Button -->
     {#if !isSidebarOpen}
       <button
         on:click={() => isSidebarOpen = true}
-        class="absolute top-2.5 left-3 z-30 p-1.5 rounded-xl glass-panel border border-garden-border text-garden-muted hover:text-white hover:border-emerald-500/40 transition-colors shadow-md"
+        class="absolute top-2.5 left-3 z-30 p-1.5 rounded-xl glass-panel border border-garden-border text-garden-muted hover:text-garden-text hover:border-emerald-500/40 transition-colors shadow-md"
         title="Mostrar Barra Lateral"
       >
         <PanelLeftOpen class="w-4 h-4 text-emerald-400" />
@@ -219,15 +264,28 @@
     {/if}
   </main>
 
+  <!-- Right Sidebar Resizer Splitter -->
+  {#if isRightPanelOpen}
+    <!-- svelte-ignore a11y-no-static-element-interactions -->
+    <div 
+      on:mousedown={startResizingRight}
+      class="w-[3px] hover:w-[6px] cursor-col-resize hover:bg-emerald-500/40 bg-garden-border/40 transition-all flex-shrink-0 z-30 select-none"
+      title="Arrastra para cambiar el tamaño"
+    ></div>
+  {/if}
+
   <!-- RIGHT PANEL: Local Graph vs Backlinks Tabs -->
-  <aside class="{isRightPanelOpen ? 'w-72 sm:w-80' : 'w-0 opacity-0 overflow-hidden'} transition-all duration-300 glass-panel border-l border-garden-border flex flex-col flex-shrink-0 relative">
+  <aside 
+    style="width: {isRightPanelOpen ? rightPanelWidth : 0}px"
+    class="transition-[opacity] duration-300 glass-panel border-l border-garden-border flex flex-col flex-shrink-0 relative {!isRightPanelOpen ? 'opacity-0 overflow-hidden' : ''}"
+  >
     
     <!-- Panel Header with Tab Switcher & Hide Button -->
     <div class="p-3 border-b border-garden-border/60 flex items-center justify-between">
       <div class="flex items-center bg-garden-surface p-0.5 rounded-lg border border-garden-border text-xs">
         <button
           on:click={() => inspectorTab = 'graph'}
-          class="px-2.5 py-1 rounded-md transition-colors flex items-center space-x-1 {inspectorTab === 'graph' ? 'bg-garden-card text-white font-bold' : 'text-garden-muted hover:text-white'}"
+          class="px-2.5 py-1 rounded-md transition-colors flex items-center space-x-1 {inspectorTab === 'graph' ? 'bg-garden-card text-garden-text font-bold' : 'text-garden-muted hover:text-garden-text'}"
         >
           <Network class="w-3.5 h-3.5 text-emerald-400" />
           <span>Grafo Local</span>
@@ -235,7 +293,7 @@
 
         <button
           on:click={() => inspectorTab = 'backlinks'}
-          class="px-2.5 py-1 rounded-md transition-colors flex items-center space-x-1 {inspectorTab === 'backlinks' ? 'bg-garden-card text-white font-bold' : 'text-garden-muted hover:text-white'}"
+          class="px-2.5 py-1 rounded-md transition-colors flex items-center space-x-1 {inspectorTab === 'backlinks' ? 'bg-garden-card text-garden-text font-bold' : 'text-garden-muted hover:text-garden-text'}"
         >
           <Link2 class="w-3.5 h-3.5 text-sky-400" />
           <span>Menciones ({backlinks.length})</span>
@@ -244,14 +302,14 @@
 
       <button
         on:click={() => isRightPanelOpen = false}
-        class="p-1 rounded hover:bg-garden-surface text-garden-muted hover:text-white transition-colors"
+        class="p-1 rounded hover:bg-garden-surface text-garden-muted hover:text-garden-text transition-colors"
         title="Ocultar Panel"
       >
         <PanelRightClose class="w-4 h-4" />
       </button>
     </div>
 
-    <div class="p-4 space-y-6 overflow-y-auto flex-grow">
+    <div class="p-4 space-y-6 overflow-y-auto flex-grow select-text">
       
       <!-- TAB 1: Local Interactive Graph -->
       {#if inspectorTab === 'graph'}

@@ -72,11 +72,28 @@
     const svg = d3.select(svgElement);
     svg.selectAll('*').remove();
 
+    // Append glow filters
+    const defs = svg.append('defs');
+    const filter = defs.append('filter')
+      .attr('id', 'graph-glow')
+      .attr('x', '-20%')
+      .attr('y', '-20%')
+      .attr('width', '140%')
+      .attr('height', '140%');
+    
+    filter.append('feGaussianBlur')
+      .attr('stdDeviation', '4')
+      .attr('result', 'blur');
+      
+    const feMerge = filter.append('feMerge');
+    feMerge.append('feMergeNode').attr('in', 'blur');
+    feMerge.append('feMergeNode').attr('in', 'SourceGraphic');
+
     simulation = d3.forceSimulation(nodesData as any)
-      .force('link', d3.forceLink(linksData as any).id((d: any) => d.id).distance(65))
-      .force('charge', d3.forceManyBody().strength(-140))
+      .force('link', d3.forceLink(linksData as any).id((d: any) => d.id).distance(75))
+      .force('charge', d3.forceManyBody().strength(-150))
       .force('center', d3.forceCenter(width / 2, height / 2))
-      .force('collision', d3.forceCollide().radius(25));
+      .force('collision', d3.forceCollide().radius(28));
 
     // Render Links
     const linkGroup = svg.append('g').attr('class', 'links');
@@ -84,10 +101,10 @@
       .data(linksData)
       .enter()
       .append('line')
-      .attr('stroke', '#38bdf8')
-      .attr('stroke-opacity', 0.6)
-      .attr('stroke-width', 1.8)
-      .attr('stroke-dasharray', '3 2');
+      .attr('stroke', 'var(--accent)')
+      .attr('stroke-opacity', 0.4)
+      .attr('stroke-width', 2.2)
+      .attr('class', 'd3-link-animated');
 
     // Render Nodes
     const nodeGroup = svg.append('g').attr('class', 'nodes');
@@ -116,17 +133,26 @@
 
     nodeElements.append('circle')
       .attr('r', (d: any) => d.val)
-      .attr('fill', (d: any) => d.id === activeNote.id ? '#10b981' : '#38bdf8')
-      .attr('stroke', '#ffffff')
-      .attr('stroke-width', 1.5);
+      .attr('fill', (d: any) => {
+        if (d.id === activeNote.id) return 'var(--accent)';
+        if (d.stage === 'seed') return 'var(--node-seed, #10b981)';
+        if (d.stage === 'growing') return 'var(--node-growing, #3b82f6)';
+        return 'var(--node-evergreen, #8b5cf6)';
+      })
+      .attr('filter', (d: any) => d.id === activeNote.id ? 'url(#graph-glow)' : null)
+      .attr('stroke', 'var(--bg-main)')
+      .attr('stroke-width', 2.5)
+      .attr('class', (d: any) => d.id === activeNote.id ? 'node-glow' : '');
 
     nodeElements.append('text')
       .text((d: any) => d.title.length > 16 ? d.title.slice(0, 14) + '...' : d.title)
-      .attr('y', (d: any) => d.val + 12)
+      .attr('y', (d: any) => d.val + 14)
       .attr('text-anchor', 'middle')
-      .attr('fill', '#ffffff')
+      .attr('fill', 'var(--text-main)')
+      .attr('opacity', 0.95)
       .attr('font-size', '10px')
-      .attr('font-weight', '600');
+      .attr('font-weight', '600')
+      .style('pointer-events', 'none');
 
     simulation.on('tick', () => {
       linkElements

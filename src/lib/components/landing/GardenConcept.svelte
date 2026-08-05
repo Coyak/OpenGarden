@@ -141,12 +141,12 @@
             <h4 class="text-base font-bold text-white">{zettelkastenStages[activeTab].title}</h4>
           </div>
           <p class="text-xs text-garden-muted font-mono mb-3">{zettelkastenStages[activeTab].subtitle}</p>
-          <p class="text-xs text-slate-300 leading-relaxed">
+          <p class="text-xs text-garden-text/90 leading-relaxed">
             {zettelkastenStages[activeTab].desc}
           </p>
         </div>
 
-        <div class="p-5 rounded-xl bg-black/40 border border-garden-border font-mono text-xs text-slate-300 leading-relaxed overflow-x-auto">
+        <div class="p-5 rounded-xl bg-garden-surface/80 border border-garden-border font-mono text-xs text-garden-text leading-relaxed overflow-x-auto">
           <div class="flex items-center justify-between pb-3 mb-3 border-b border-garden-border text-garden-muted text-[11px]">
             <span>Vista de Documento Notion</span>
             <span class="text-emerald-400 font-sans font-medium">Contenido Markdown</span>
